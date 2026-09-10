@@ -1,11 +1,2 @@
-
-const btn = document.querySelector('.menu-btn');
-const nav = document.querySelector('nav');
-btn?.addEventListener('click', () => {
-  const open = nav.classList.toggle('open');
-  btn.setAttribute('aria-expanded', String(open));
-});
-document.querySelectorAll('nav a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
-const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add('in')), {threshold:.12});
-document.querySelectorAll('.reveal').forEach(el => io.observe(el));
-document.getElementById('year').textContent = new Date().getFullYear();
+const menuButton=document.querySelector('.menu-btn');const nav=document.querySelector('#nav');if(menuButton&&nav){menuButton.addEventListener('click',()=>{const open=nav.classList.toggle('open');menuButton.setAttribute('aria-expanded',open);});}document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',()=>nav?.classList.remove('open')));const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add('in')}),{threshold:.12});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));const y=document.getElementById('year');if(y)y.textContent=new Date().getFullYear();
+const lf=document.createElement('link');lf.rel='stylesheet';lf.href='logo-fix.css';document.head.appendChild(lf);
