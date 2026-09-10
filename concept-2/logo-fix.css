@@ -1,0 +1,8 @@
+/* Preserve the complete transparent El Taco Dorado logo artwork. */
+.logo-lockup, .hero-logo-wrap, footer { overflow: visible !important; }
+.logo-lockup img { width: auto !important; height: 104px !important; max-width: 132px !important; max-height: none !important; object-fit: contain !important; object-position: center !important; }
+.hero-left { overflow: visible !important; }
+.hero-logo-wrap { min-height: 319px !important; }
+.hero-logo-wrap img { width: 220px !important; height: 319px !important; max-width: 220px !important; max-height: none !important; object-fit: contain !important; object-position: center !important; position: relative !important; z-index: 5 !important; }
+footer img { width: auto !important; height: 150px !important; max-height: none !important; object-fit: contain !important; }
+@media(max-width:680px){ .logo-lockup img{height:82px !important;width:auto !important;max-height:none !important;} .hero-logo-wrap{min-height:260px !important;} .hero-logo-wrap img{width:180px !important;height:261px !important;} }

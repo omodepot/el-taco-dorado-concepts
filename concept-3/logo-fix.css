@@ -1,0 +1,5 @@
+/* Preserve the complete transparent El Taco Dorado logo artwork. */
+.brand, footer { overflow: visible !important; }
+.brand img { width: auto !important; height: 92px !important; max-width: 104px !important; max-height: none !important; object-fit: contain !important; object-position: center !important; }
+footer img { width: 105px !important; height: auto !important; max-height: none !important; object-fit: contain !important; object-position: center !important; }
+@media(max-width:620px){ .brand img{height:78px !important;width:auto !important;max-height:none !important;} }
