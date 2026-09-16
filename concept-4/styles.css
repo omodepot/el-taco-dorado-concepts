@@ -103,12 +103,13 @@ h1 em{font-style:normal;color:var(--green)}
 .feature-copy{padding:85px clamp(30px,6vw,92px);display:flex;flex-direction:column;justify-content:center}
 .feature-copy>p:not(.eyebrow){font-size:18px;line-height:1.7;color:#daf4f0}
 
-.coupon-section{padding:100px clamp(22px,6vw,92px);background:var(--cream);display:grid;grid-template-columns:.72fr 1.28fr;gap:60px;align-items:center}
+.coupon-section{padding:90px clamp(22px,6vw,92px);background:var(--cream);display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center;overflow:hidden}
 .coupon-copy h2{font-size:clamp(48px,5.4vw,78px);line-height:.94;color:var(--green-dark)}
 .coupon-copy>p:not(.eyebrow){font-size:17px;line-height:1.7;color:#5a6a64;max-width:560px}
 .coupon-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
-.coupon-preview{background:#fff;padding:14px;border-radius:24px;box-shadow:0 20px 50px rgba(32,45,42,.14)}
-.coupon-preview img{width:100%;height:auto;border-radius:14px}
+.coupon-preview{background:#fff;padding:10px;border-radius:20px;box-shadow:0 20px 50px rgba(32,45,42,.14);width:min(100%,390px);justify-self:center;transform:rotate(3.5deg);transition:.25s ease}
+.coupon-preview:hover{transform:rotate(1.5deg) scale(1.025)}
+.coupon-preview img{width:100%;height:auto;border-radius:12px}
 
 .visit{padding:105px clamp(22px,6vw,92px);background:#fff}
 .visit-heading{text-align:center;margin-bottom:50px}
