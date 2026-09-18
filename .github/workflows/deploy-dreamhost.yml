@@ -40,7 +40,7 @@ jobs:
           # Find PNG/JPG assets actually referenced by the live page/CSS.
           refs = set()
           for text in texts.values():
-              refs.update(re.findall(r'(?:\.\./)?assets/([^"')]+\.(?:png|PNG|jpg|jpeg))', text, flags=re.I))
+              refs.update(re.findall(r"(?:\\.\\./)?assets/([^\\\"')]+\\.(?:png|jpg|jpeg))", text, flags=re.I))
 
           for name in refs:
               if name.lower() == "el-taco-dorado-menu-qr.png":
