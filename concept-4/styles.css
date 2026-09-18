@@ -126,7 +126,7 @@ h1 em{font-style:normal;color:var(--green)}
 .final-copy>p:not(.eyebrow){font-size:18px;line-height:1.7;color:#ffe3df}
 .final-food{min-height:560px;background:url("../assets/California breakfast burrito-dark gray.png") center/cover}
 
-footer{background:var(--ink);color:white;padding:55px clamp(22px,6vw,92px) 24px;display:grid;grid-template-columns:150px 1fr 1fr;gap:30px;align-items:center}
+footer{background:var(--green);color:white;padding:55px clamp(22px,6vw,92px) 24px;display:grid;grid-template-columns:150px 1fr 1fr;gap:30px;align-items:center}
 footer img{width:110px;max-height:150px;object-fit:contain}
 footer p{color:#c7d4ce;font-size:13px}
 .footer-links{display:flex;justify-content:flex-end;gap:18px;font-weight:800;font-size:13px}
