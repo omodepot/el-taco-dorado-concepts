@@ -1,0 +1,31 @@
+name: Test DreamHost SSH Connection
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-ssh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure SSH key
+        shell: bash
+        env:
+          DREAMHOST_SSH_KEY: ${{ secrets.DREAMHOST_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "$DREAMHOST_SSH_KEY"
+          mkdir -p ~/.ssh
+          printf '%s\n' "$DREAMHOST_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -p 22 iad1-shared-b7-07.dreamhost.com >> ~/.ssh/known_hosts
+
+      - name: Test DreamHost authentication only
+        shell: bash
+        run: |
+          set -euo pipefail
+          ssh -p 22 -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes -o BatchMode=yes \
+            dh_dxur64@iad1-shared-b7-07.dreamhost.com \
+            'echo "DREAMHOST SSH CONNECTION SUCCESSFUL"'
