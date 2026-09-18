@@ -26,6 +26,52 @@ jobs:
           cp concept-4/index.html concept-4/styles.css concept-4/script.js _deploy/
           cp assets/* _deploy/assets/
 
+          # Build lightweight production WebP assets and a permanent live-domain QR.
+          python -m pip install --quiet Pillow qrcode
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import qrcode, re
+
+          root = Path("_deploy")
+          files = [root/"index.html", root/"styles.css"]
+          texts = {p: p.read_text() for p in files}
+
+          # Find PNG/JPG assets actually referenced by the live page/CSS.
+          refs = set()
+          for text in texts.values():
+              refs.update(re.findall(r'(?:\.\./)?assets/([^"')]+\.(?:png|PNG|jpg|jpeg))', text, flags=re.I))
+
+          for name in refs:
+              if name.lower() == "el-taco-dorado-menu-qr.png":
+                  continue
+              src = root/"assets"/name
+              if not src.exists():
+                  continue
+              with Image.open(src) as im:
+                  im.load()
+                  # Keep visual quality while avoiding oversized source dimensions.
+                  max_dim = 1800
+                  if max(im.size) > max_dim:
+                      scale = max_dim / max(im.size)
+                      im = im.resize((round(im.width*scale), round(im.height*scale)), Image.Resampling.LANCZOS)
+                  out_name = str(Path(name).with_suffix(".webp"))
+                  out = root/"assets"/out_name
+                  im.save(out, "WEBP", quality=82, method=6)
+              for p in files:
+                  texts[p] = texts[p].replace(name, out_name)
+
+          # QR must point to the permanent production-domain menu, not GitHub Pages.
+          qr = qrcode.QRCode(version=None, error_correction=qrcode.constants.ERROR_CORRECT_M,
+                             box_size=10, border=4)
+          qr.add_data("https://el-taco-dorado.com/assets/El-Taco-Dorado-Menu.pdf")
+          qr.make(fit=True)
+          qr.make_image(fill_color="black", back_color="white").save(root/"assets"/"el-taco-dorado-menu-qr.png")
+
+          for p, text in texts.items():
+              p.write_text(text)
+          PY
+
           # Concept 4 previews live one directory below the repo root.
           # Production lives at the domain root, so normalize asset paths.
           sed -i 's#\.\./assets/#assets/#g' _deploy/index.html _deploy/styles.css
@@ -37,6 +83,25 @@ jobs:
           User-agent: *
           Allow: /
           Sitemap: https://el-taco-dorado.com/sitemap.xml
+          EOF
+
+          cat > _deploy/.htaccess <<'EOF'
+          <IfModule mod_expires.c>
+            ExpiresActive On
+            ExpiresByType image/webp "access plus 1 year"
+            ExpiresByType image/png "access plus 1 year"
+            ExpiresByType image/jpeg "access plus 1 year"
+            ExpiresByType text/css "access plus 7 days"
+            ExpiresByType application/javascript "access plus 7 days"
+          </IfModule>
+          <IfModule mod_headers.c>
+            <FilesMatch "\\.(webp|png|jpe?g)$">
+              Header set Cache-Control "public, max-age=31536000, immutable"
+            </FilesMatch>
+          </IfModule>
+          <IfModule mod_deflate.c>
+            AddOutputFilterByType DEFLATE text/html text/css application/javascript application/xml
+          </IfModule>
           EOF
 
           cat > _deploy/sitemap.xml <<'EOF'
