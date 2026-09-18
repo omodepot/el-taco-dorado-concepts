@@ -31,39 +31,42 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           from PIL import Image
-          import qrcode, re
+          import qrcode
 
           root = Path("_deploy")
           files = [root/"index.html", root/"styles.css"]
           texts = {p: p.read_text() for p in files}
 
-          # Find PNG/JPG assets actually referenced by the live page/CSS.
-          refs = set()
-          for text in texts.values():
-              refs.update(re.findall(r"(?:\\.\\./)?assets/([^\\\"')]+\\.(?:png|jpg|jpeg))", text, flags=re.I))
+          image_names = [
+              "California breakfast burrito-dark gray.png",
+              "Chicken enchiladas-dark limestone.png",
+              "El Taco Dorado-inside-horizontal.png",
+              "Huevos Rancheros on Walnut Tabletop.png",
+              "Pollo Cancun-walnut.png",
+              "Santa Fe salad-pale limestone.png",
+              "el-taco-dorado-logo.png",
+              "coupon-el-taco-dorado.png",
+              "el-taco-dorado-opening-special.png",
+          ]
 
-          for name in refs:
-              if name.lower() == "el-taco-dorado-menu-qr.png":
-                  continue
+          for name in image_names:
               src = root/"assets"/name
               if not src.exists():
-                  continue
+                  raise FileNotFoundError(src)
               with Image.open(src) as im:
                   im.load()
-                  # Keep visual quality while avoiding oversized source dimensions.
-                  max_dim = 1800
+                  max_dim = 1800 if "logo" not in name.lower() else 900
                   if max(im.size) > max_dim:
                       scale = max_dim / max(im.size)
                       im = im.resize((round(im.width*scale), round(im.height*scale)), Image.Resampling.LANCZOS)
                   out_name = str(Path(name).with_suffix(".webp"))
                   out = root/"assets"/out_name
-                  im.save(out, "WEBP", quality=82, method=6)
+                  im.save(out, "WEBP", quality=80, method=6)
+                  print(f"OPTIMIZED {name}: {src.stat().st_size} -> {out.stat().st_size} bytes")
               for p in files:
                   texts[p] = texts[p].replace(name, out_name)
 
-          # QR must point to the permanent production-domain menu, not GitHub Pages.
-          qr = qrcode.QRCode(version=None, error_correction=qrcode.constants.ERROR_CORRECT_M,
-                             box_size=10, border=4)
+          qr = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_M, box_size=10, border=4)
           qr.add_data("https://el-taco-dorado.com/assets/El-Taco-Dorado-Menu.pdf")
           qr.make(fit=True)
           qr.make_image(fill_color="black", back_color="white").save(root/"assets"/"el-taco-dorado-menu-qr.png")
