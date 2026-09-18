@@ -61,7 +61,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          rsync -avz --delete \
+          rsync -avz \
             --exclude='.well-known/' \
             -e "ssh -p 22" \
             _deploy/ dh_dxur64@iad1-shared-b7-07.dreamhost.com:/home/dh_dxur64/el-taco-dorado.com/
