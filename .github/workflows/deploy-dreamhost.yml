@@ -1,0 +1,67 @@
+name: Deploy El Taco Dorado to DreamHost
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: el-taco-dorado-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Prepare production site
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf _deploy
+          mkdir -p _deploy/assets
+          cp concept-4/index.html concept-4/styles.css concept-4/script.js _deploy/
+          cp assets/* _deploy/assets/
+
+          # Concept 4 previews live one directory below the repo root.
+          # Production lives at the domain root, so normalize asset paths.
+          sed -i 's#\.\./assets/#assets/#g' _deploy/index.html _deploy/styles.css
+
+          # Production must be indexable.
+          sed -i '/<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">/d' _deploy/index.html
+
+          cat > _deploy/robots.txt <<'EOF'
+          User-agent: *
+          Allow: /
+          Sitemap: https://el-taco-dorado.com/sitemap.xml
+          EOF
+
+          cat > _deploy/sitemap.xml <<'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+            <url><loc>https://el-taco-dorado.com/</loc></url>
+          </urlset>
+          EOF
+
+      - name: Configure SSH
+        shell: bash
+        env:
+          DREAMHOST_SSH_KEY: ${{ secrets.DREAMHOST_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          printf '%s\n' "$DREAMHOST_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -p 22 iad1-shared-b7-07.dreamhost.com >> ~/.ssh/known_hosts
+
+      - name: Deploy approved site
+        shell: bash
+        run: |
+          set -euo pipefail
+          rsync -avz --delete \
+            --exclude='.well-known/' \
+            -e "ssh -p 22" \
+            _deploy/ dh_dxur64@iad1-shared-b7-07.dreamhost.com:/home/dh_dxur64/el-taco-dorado.com/
