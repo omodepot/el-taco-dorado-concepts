@@ -109,7 +109,7 @@ h1 em{font-style:normal;color:var(--green)}
 .coupon-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
 .coupon-preview{background:#fff;padding:10px;border-radius:20px;box-shadow:0 20px 50px rgba(32,45,42,.14);width:min(100%,390px);justify-self:center;transform:rotate(3.5deg);transition:.25s ease}
 .coupon-preview:hover{transform:rotate(1.5deg) scale(1.025)}
-.coupon-preview img{width:100%;height:auto;border-radius:12px}
+.coupon-preview img{width:100%;aspect-ratio:4/3;object-fit:cover;object-position:center;border-radius:12px}
 
 .visit{padding:105px clamp(22px,6vw,92px);background:#fff}
 .visit-heading{text-align:center;margin-bottom:50px}
