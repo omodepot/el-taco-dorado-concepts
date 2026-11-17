@@ -85,7 +85,7 @@ h1 em{font-style:normal;color:var(--green)}
 .experience-copy{padding:95px clamp(30px,7vw,105px);display:flex;flex-direction:column;justify-content:center}
 .experience-copy h2,.feature-copy h2,.final-copy h2{font-size:clamp(58px,6.6vw,100px);line-height:.91}
 .experience-copy>p:not(.eyebrow){font-size:18px;line-height:1.7;color:#ead8e7;max-width:650px}
-.experience-photo{min-height:660px;background:url("../assets/El Taco Dorado-inside-horizontal.png") center/cover}
+.experience-photo{min-height:660px;background:url("../assets/el-taco-dorado-dining-room.jpg") center/cover}
 .three-points{display:grid;grid-template-columns:repeat(3,1fr);margin-top:34px;border-top:1px solid rgba(255,255,255,.2)}
 .three-points div{padding:24px 14px 0 0}
 .three-points b{display:block;color:var(--lime);font-size:10px}
